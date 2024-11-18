@@ -42,12 +42,17 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
          * Handlers
          */
+
+        final JPanel canvasNew = new JPanel();
+        canvasNew.setLayout(new BoxLayout(canvasNew, BoxLayout.X_AXIS));
+        canvas.add(canvasNew, BorderLayout.CENTER);
+        canvasNew.add(write);
+
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -67,32 +72,8 @@ public class BadIOGUI {
             }
         });
 
-        final JPanel canvasNew = new JPanel();
-        canvasNew.setLayout(new BoxLayout(canvasNew, BoxLayout.Y_AXIS));
-        canvas.add(canvasNew, BorderLayout.CENTER);
-        JButton writeNew = new JButton();
-        canvasNew.add(writeNew, BorderLayout.CENTER);
-        frame.setContentPane(canvas);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        writeNew.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                /*
-                 * This would be VERY BAD in a real application.
-                 * 
-                 * This makes the Event Dispatch Thread (EDT) work on an I/O
-                 * operation. I/O operations may take a long time, during which
-                 * your UI becomes completely unresponsive.
-                 */
-                try (PrintStream ps = new PrintStream(PATH, StandardCharsets.UTF_8)) {
-                    ps.print(randomGenerator.nextInt());
-                } catch (IOException e1) {
-                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
-                    e1.printStackTrace(); // NOPMD: allowed as this is just an exercise
-                }
-            }
-        });
+        JButton read = new JButton();
+        canvasNew.add(read, BorderLayout.EAST);
     }
 
     private void display() {
